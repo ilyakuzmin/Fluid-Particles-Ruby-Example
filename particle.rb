@@ -7,7 +7,7 @@ class Vector
   end
 end
 
-G = 10
+G = 12
 PARTICLE_RADIUS = 8
 CONNECT_RADIUS = 20
 CONNECT_RADIUS_SQUARE = CONNECT_RADIUS**2
@@ -29,8 +29,7 @@ class Particles
       (@particles - [particle]).each do |particle2|
         r_square = (particle2.position.x - particle.position.x)**2 + (particle2.position.y - particle.position.y)**2
 
-        # if r_square > CONNECT_RADIUS_SQUARE
-          # puts r_square
+        if r_square > CONNECT_RADIUS_SQUARE
           r = Math.sqrt(r_square)
           factor_x = (particle2.position.x - particle.position.x) / r
           factor_y = (particle2.position.y - particle.position.y) / r
@@ -38,13 +37,11 @@ class Particles
           particle.radius = r
           particle.boost.x += factor_x * G / r_square
           particle.boost.y += factor_y * G / r_square
-        # end
+        end
       end
     end
 
     # Velocity
-
-
     @particles.each do |particle|
       particle.velocity.x += particle.boost.x
       particle.velocity.y += particle.boost.y

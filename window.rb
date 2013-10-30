@@ -33,7 +33,9 @@ class GameWindow < Gosu::Window
       @button_pressed = false
     end
 
-    @particles.update
+    # if button_down?(Gosu::KbA)
+      @particles.update
+    # end
   end
   
   def draw
