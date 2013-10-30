@@ -12,13 +12,14 @@ class GameWindow < Gosu::Window
     @score = 0
 
     @button_pressed = false
+    @button_pressed2 = false
   end
   
   def update
 
     if @score == 0
-      @particles.new_particle(x: 200, y: 150)
-      @particles.new_particle(x: 300, y: 120)
+      # @particles.new_particle(x: 200, y: 150)
+      # @particles.new_particle(x: 300, y: 120)
     end
 
     @score += 1
@@ -28,12 +29,20 @@ class GameWindow < Gosu::Window
       @button_pressed = true
 
       @particles.new_particle(x: mouse_x, y: mouse_y)
-
     else
       @button_pressed = false
     end
 
-    # if button_down?(Gosu::KbA)
+    if button_down?(Gosu::KbA)
+      return if @button_pressed2
+      @button_pressed2 = true
+
+      @particles.update
+    else
+      @button_pressed2 = false
+    end
+
+    # if button_down?(Gosu::KbS)
       @particles.update
     # end
   end

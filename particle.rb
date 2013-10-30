@@ -7,9 +7,9 @@ class Vector
   end
 end
 
-G = 12
+G = 40
 PARTICLE_RADIUS = 8
-CONNECT_RADIUS = 20
+CONNECT_RADIUS = 40
 CONNECT_RADIUS_SQUARE = CONNECT_RADIUS**2
 
 class Particles
@@ -29,15 +29,20 @@ class Particles
       (@particles - [particle]).each do |particle2|
         r_square = (particle2.position.x - particle.position.x)**2 + (particle2.position.y - particle.position.y)**2
 
-        if r_square > CONNECT_RADIUS_SQUARE
-          r = Math.sqrt(r_square)
-          factor_x = (particle2.position.x - particle.position.x) / r
-          factor_y = (particle2.position.y - particle.position.y) / r
+        r = Math.sqrt(r_square)
+        factor_x = (particle2.position.x - particle.position.x) / r
+        factor_y = (particle2.position.y - particle.position.y) / r
 
-          particle.radius = r
-          particle.boost.x += factor_x * G / r_square
-          particle.boost.y += factor_y * G / r_square
+        particle.radius = r
+
+        if r_square > CONNECT_RADIUS_SQUARE * 4
+          g = G
+        else r_square > CONNECT_RADIUS_SQUARE * 1
+          g = G * 10 / r * -1
         end
+
+        particle.boost.x += factor_x * g / r_square
+        particle.boost.y += factor_y * g / r_square
       end
     end
 
@@ -77,13 +82,21 @@ class Particle
 
     @r_square = 0
 
+    @image3  = Gosu::Image.new($window, Circle.new(CONNECT_RADIUS), true)
+    @image4  = Gosu::Image.new($window, Circle.new(CONNECT_RADIUS-1, Circle::BLACK), true)
+
     @image  = Gosu::Image.new($window, Circle.new(PARTICLE_RADIUS), true)
-    @image2 = Gosu::Image.new($window, Circle.new(PARTICLE_RADIUS-1, Circle::BLACK), true)
+    @image2 = Gosu::Image.new($window, Circle.new(PARTICLE_RADIUS-2, Circle::BLACK), true)
   end
 
   def draw
+    x = @position.x-CONNECT_RADIUS+PARTICLE_RADIUS
+    y = @position.y-CONNECT_RADIUS+PARTICLE_RADIUS
+    @image3.draw(x, y, 1);
+    @image4.draw(x+1, y+1, 1);
+
     @image.draw(@position.x, @position.y, 1);
-    @image2.draw(@position.x+1, @position.y+1, 1);
+    @image2.draw(@position.x+2, @position.y+2, 1);
   end
 
   def update
