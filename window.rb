@@ -7,40 +7,39 @@ class GameWindow < Gosu::Window
     super 640, 480, false
     self.caption = "Gosu Tutorial Game"
 
-    @font = Gosu::Font.new(self, Gosu::default_font_name, 14)
+    @particles = Particles.new
 
-    @particles = []
     @score = 0
 
     @button_pressed = false
   end
   
   def update
+
+    if @score == 0
+      @particles.new_particle(x: 200, y: 150)
+      @particles.new_particle(x: 300, y: 120)
+    end
+
     @score += 1
 
     if button_down?(Gosu::MsLeft)
       return if @button_pressed
       @button_pressed = true
 
-      particle = Particle.new(mouse_x, mouse_y)
-      @particles << particle
+      @particles.new_particle(x: mouse_x, y: mouse_y)
+
     else
       @button_pressed = false
     end
+
+    @particles.update
   end
   
   def draw
-    @font.draw("Particles: #{@particles.count}", 10, 10, 2, 1.0, 1.0, 0xffffff00)
-    i = 0
-    @particles.each do |p|
-      p.draw
+    $font.draw("Particles: #{@particles.count}", 10, 10, 2, 1.0, 1.0, 0xffffff00)
 
-      # Debug & Test
-      @font.draw(p.debug, 10, 28 + (i*18), 2, 1.0, 1.0, 0xffffff00)
-      p.position.x += Float(rand(100))*0.01 * PlusMinus.get
-      p.position.y += Float(rand(100))*0.01 * PlusMinus.get
-      i += 1
-    end
+    @particles.draw
   end
 
   def needs_cursor?
@@ -48,5 +47,6 @@ class GameWindow < Gosu::Window
   end
 end
 
+$font = Gosu::Font.new($window, Gosu::default_font_name, 14)
 $window = GameWindow.new
 $window.show
