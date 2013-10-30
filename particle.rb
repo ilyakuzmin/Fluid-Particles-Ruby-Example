@@ -7,7 +7,7 @@ class Vector
   end
 end
 
-G = 1000
+G = 10
 PARTICLE_RADIUS = 8
 CONNECT_RADIUS = 20
 CONNECT_RADIUS_SQUARE = CONNECT_RADIUS**2
@@ -22,25 +22,33 @@ class Particles
   end
 
   def update
+    # Boost
     @particles.each do |particle|
-      particle.velocity.x = 0
-      particle.velocity.y = 0
+      particle.boost.x = 0
+      particle.boost.y = 0
       (@particles - [particle]).each do |particle2|
         r_square = (particle2.position.x - particle.position.x)**2 + (particle2.position.y - particle.position.y)**2
 
-        if r_square > CONNECT_RADIUS_SQUARE
-          puts r_square
+        # if r_square > CONNECT_RADIUS_SQUARE
+          # puts r_square
           r = Math.sqrt(r_square)
           factor_x = (particle2.position.x - particle.position.x) / r
           factor_y = (particle2.position.y - particle.position.y) / r
 
           particle.radius = r
-          particle.velocity.x += factor_x * G / r_square
-          particle.velocity.y += factor_y * G / r_square
-        end
+          particle.boost.x += factor_x * G / r_square
+          particle.boost.y += factor_y * G / r_square
+        # end
       end
     end
+
+    # Velocity
+
+
     @particles.each do |particle|
+      particle.velocity.x += particle.boost.x
+      particle.velocity.y += particle.boost.y
+
       particle.position.x += particle.velocity.x
       particle.position.y += particle.velocity.y
     end
@@ -62,11 +70,12 @@ class Particles
 end
 
 class Particle
-  attr_accessor :position, :radius, :velocity
+  attr_accessor :position, :radius, :velocity, :boost
 
   def initialize(x = 0, y = 0)
     @position = Vector.new(x - PARTICLE_RADIUS, y - PARTICLE_RADIUS)
     @velocity = Vector.new
+    @boost = Vector.new
     @radius = 0
 
     @r_square = 0
@@ -85,6 +94,8 @@ class Particle
   end
 
   def debug
-    "X: #{@position.x.round(1)}, Y: #{@position.y.round(1)}, R: #{radius.round(1)}, V_X: #{@velocity.x.round(1)}, V_Y: #{@velocity.y.round(1)}"
+    "X: #{@position.x.round(1)}, Y: #{@position.y.round(1)}, R: #{radius.round(1)}, "+
+    "B_X: #{@boost.x.round(1)}, B_Y: #{@boost.y.round(1)}, "+
+    "V_X: #{@velocity.x.round(1)}, V_Y: #{@velocity.y.round(1)}, "
   end
 end

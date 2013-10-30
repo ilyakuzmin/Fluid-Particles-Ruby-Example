@@ -47,6 +47,6 @@ class GameWindow < Gosu::Window
   end
 end
 
-$font = Gosu::Font.new($window, Gosu::default_font_name, 14)
 $window = GameWindow.new
+$font = Gosu::Font.new($window, Gosu::default_font_name, 14)
 $window.show
