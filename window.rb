@@ -18,33 +18,63 @@ class GameWindow < Gosu::Window
   def update
 
     if @score == 0
-      # @particles.new_particle(x: 200, y: 150)
-      # @particles.new_particle(x: 300, y: 120)
+      # @particles.new_particle(x: 200, y: 350)
+      # @particles.new_particle(x: 210, y: 350)
+      # @particles.new_particle(x: 200, y: 340)
+      # @particles.new_particle(x: 215, y: 350)
+      # @particles.new_particle(x: 220, y: 350)
+      # @particles.new_particle(x: 225, y: 350)
+      # @particles.new_particle(x: 230, y: 350)
     end
 
     @score += 1
 
-    if button_down?(Gosu::MsLeft)
-      return if @button_pressed
-      @button_pressed = true
 
-      @particles.new_particle(x: mouse_x, y: mouse_y)
+    if button_down?(Gosu::MsLeft)
+      # return if @button_pressed
+      # @button_pressed = true
+
+      @particles.new_particle(x: mouse_x + rand(100) - 50, y: mouse_y + rand(100) - 50)
     else
-      @button_pressed = false
+      # @button_pressed = false
     end
 
     if button_down?(Gosu::KbA)
       return if @button_pressed2
       @button_pressed2 = true
 
-      @particles.update
+      # @particles.update
+
+      @particles.particles.clear
+      @particles.new_particle(x: 200, y: 350)
+      @particles.new_particle(x: 210, y: 350)
+      @particles.new_particle(x: 200, y: 340)
+      @particles.new_particle(x: 210, y: 340)
     else
       @button_pressed2 = false
     end
+    @particles.update
 
-    # if button_down?(Gosu::KbS)
+    if button_down?(Gosu::KbS)
+      return if @button_pressed
+      @button_pressed = true
+      
       @particles.update
-    # end
+    else
+      @button_pressed = false
+    end
+
+    if button_down?(Gosu::KbD)
+      @particles.update
+    end
+
+
+    if button_down?(Gosu::KbS)
+      @particles.particles.each do |particle|
+        particle.velocity.x *= 0.9
+        particle.velocity.y *= 0.9
+      end
+    end
   end
   
   def draw
